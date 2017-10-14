@@ -1,0 +1,42 @@
+{
+  "name": "lcd-pcf8574-server",
+  "version": "0.0.1",
+  "description": "An express based rest API for controlling LCD displays using I2C PCF8574P",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development nodemon index.js | bunyan -L",
+    "prod": "cross-env NODE_ENV=production node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://lpgera@bitbucket.org/lpgera/lcd-pcf8574-server.git"
+  },
+  "keywords": [
+    "lcd",
+    "i2c",
+    "pcf8574p",
+    "rest",
+    "api"
+  ],
+  "author": "lpgera@gmail.com",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/lpgera/lcd-pcf8574-server#readme",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.2",
+    "bunyan": "^1.8.12",
+    "config": "^1.26.2",
+    "cron": "^1.3.0",
+    "cross-env": "^5.0.5",
+    "express": "^4.16.2",
+    "express-basic-auth": "^1.1.2",
+    "express-jsonschema": "^1.1.6",
+    "lcdi2c": "^1.0.6",
+    "lodash": "^4.17.4",
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.8.0",
+    "nodemon": "^1.12.1"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "verbose": true,
+  "ext": "js json json5",
+  "execMap": {
+    "js": "node --trace-warnings"
+  },
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules",
+    "*.log"
+  ]
+}
