@@ -75,6 +75,14 @@ router.post('/page', expressJsonschema.validate({body: pageSchema}), (req, res) 
   return res.send({uuid})
 })
 
+router.post('/page/:uuid', expressJsonschema.validate({body: pageSchema}), (req, res) => {
+  const isSuccessful = display.addPageWithUuid(req.params.uuid, req.body)
+  if (isSuccessful) {
+    return res.status(204).send()
+  }
+  return res.status(409).send()
+})
+
 router.put('/page/:uuid', expressJsonschema.validate({body: pageSchema}), (req, res) => {
   const isSuccessful = display.updatePage(req.params.uuid, req.body)
   if (isSuccessful) {
