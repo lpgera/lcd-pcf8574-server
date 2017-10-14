@@ -125,16 +125,9 @@ function addPage(pageToAdd) {
   return pageUuid
 }
 
-function addPageWithUuid(pageUuid, pageToAdd) {
-  if (displayData.pages[pageUuid]) {
-    return false
-  }
-  displayData.pages[pageUuid] = pageToAdd
-  return true
-}
-
-function updatePage(pageUuid, pageToUpdate) {
+function createOrUpdatePage(pageUuid, pageToUpdate) {
   if (!displayData.pages[pageUuid]) {
+    displayData.pages[pageUuid] = pageToUpdate
     return false
   }
   displayData.pages[pageUuid] = pageToUpdate
@@ -157,7 +150,6 @@ module.exports = {
   setPageDelay,
   getConfiguration,
   addPage,
-  addPageWithUuid,
-  updatePage,
+  createOrUpdatePage,
   removePage,
 }
