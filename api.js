@@ -63,10 +63,18 @@ router.patch('/configuration', expressJsonschema.validate({body: configurationSc
 })
 
 const pageSchema = {
-  type: 'array',
-  maxItems: config.get('lcd.rows'),
-  items: {
-    type: 'string',
+  type: 'object',
+  properties: {
+    lines: {
+      type: 'array',
+      maxItems: config.get('lcd.rows'),
+      items: {
+        type: 'string',
+      },
+    },
+    useHugeCharacters: {
+      type: 'boolean',
+    },
   },
 }
 

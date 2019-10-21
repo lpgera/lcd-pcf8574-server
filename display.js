@@ -1,15 +1,9 @@
-const config = require('config')
-const LCD = require('lcdi2c')
 const _ = require('lodash')
 const uuid = require('uuid')
+const config = require('config')
+const lcd = require('./lcd')
+const hugeCharacters = require('./huge-characters')
 const log = require('./log').child({module: 'display'})
-
-const lcd = new LCD(
-  config.get('lcd.i2c.device'),
-  config.get('lcd.i2c.address'),
-  config.get('lcd.columns'),
-  config.get('lcd.rows')
-)
 
 const displayConfiguration = {
   scrollDelay: 250,
@@ -18,30 +12,26 @@ const displayConfiguration = {
 
 const displayData = {
   currentPage: 0,
-  lineOffsets: [
-    0,
-    0,
-  ],
-  pages: {
-    uuid1: [
-      'Hello world!',
-      'This is something longer...',
-    ],
-    uuid2: [
-      'Let\'s test a new page.',
-    ],
-  },
+  lineOffsets: _.times(config.get('lcd.rows'), _.constant(0)),
+  pages: {},
 }
 
 function getCurrentPage() {
   const pageIds = Object.keys(displayData.pages)
   const currentPageId = _.get(pageIds, displayData.currentPage)
   const currentPage = displayData.pages[currentPageId]
-  return currentPage || []
+  if (!currentPage) {
+    return []
+  }
+  if (currentPage.useHugeCharacters) {
+    return hugeCharacters.convertToLines(currentPage.lines[0] || '')
+  }
+  return currentPage.lines
 }
 
 function updateDisplay() {
   const currentPage = getCurrentPage()
+  log.debug('current page:', currentPage)
   const lines = _.map(currentPage, (line, index) => {
     const lineOffset = displayData.lineOffsets[index]
     if (lineOffset < 0) {
@@ -60,6 +50,7 @@ function updateDisplay() {
 
 function scroll() {
   const currentPage = getCurrentPage()
+  log.debug('current page:', currentPage)
   _.each(currentPage, (line, index) => {
     if (_.size(line) > config.get('lcd.columns')) {
       const diff = _.size(line) - config.get('lcd.columns')
