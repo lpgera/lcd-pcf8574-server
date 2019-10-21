@@ -113,6 +113,12 @@ const characters = {
     [e, e, e],
     [e, e, e],
   ],
+  '-': [
+    [e, e],
+    [l, l],
+    [e, e],
+    [e, e],
+  ],
 }
 
 const stringFromBytes = (bytes) => bytes.map(b => String.fromCharCode(b)).join('')
