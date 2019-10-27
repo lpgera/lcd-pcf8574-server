@@ -3,7 +3,7 @@ const uuid = require('uuid')
 const config = require('config')
 const lcd = require('./lcd')
 const hugeCharacters = require('./huge-characters')
-const log = require('./log').child({module: 'display'})
+const log = require('./log').child({ module: 'display' })
 
 const displayConfiguration = {
   scrollDelay: 800,
@@ -38,7 +38,9 @@ function updateDisplay() {
   const lines = currentPage.map((line, index) => {
     const lineOffset = displayData.lineOffsets[index]
     if (lineOffset < 0) {
-      const lineLimited = line.substr(0, config.get('lcd.columns')).substr(0, 16 + lineOffset)
+      const lineLimited = line
+        .substr(0, config.get('lcd.columns'))
+        .substr(0, 16 + lineOffset)
       return lineLimited.padStart(config.get('lcd.columns'))
     }
     const lineLimited = line.substr(lineOffset, config.get('lcd.columns'))

@@ -10,11 +10,16 @@ server.use((req, res) => {
   res.status(404).send()
 })
 
-server.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
+// noinspection JSUnusedLocalSymbols
+server.use((err, req, res, next) => {
   log.error(err)
   res.status(500).send()
 })
 
 server.listen(config.get('server.port'), () => {
-  log.info(`lcd-pcf8574-server is now listening on port ${config.get('server.port')} (NODE_ENV=${process.env.NODE_ENV})`)
+  log.info(
+    `lcd-pcf8574-server is now listening on port ${config.get(
+      'server.port'
+    )} (NODE_ENV=${process.env.NODE_ENV})`
+  )
 })

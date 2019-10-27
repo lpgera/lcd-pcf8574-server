@@ -10,6 +10,7 @@ lcd.createChar(l, [0, 0, 0, 0, 31, 31, 31, 31])
 lcd.createChar(f, [31, 31, 31, 31, 31, 31, 31, 31])
 lcd.createChar(e, [0, 0, 0, 0, 0, 0, 0, 0])
 
+// prettier-ignore
 const characters = {
   '0': [
     [l, u, u, l],
@@ -121,16 +122,18 @@ const characters = {
   ],
 }
 
-const stringFromBytes = (bytes) => bytes.map(b => String.fromCharCode(b)).join('')
+const stringFromBytes = bytes => bytes.map(b => String.fromCharCode(b)).join('')
 
-const convertToLines = string => string
-  .split('')
-  .map(c => characters[c])
-  .reduce(
-    (acc, c) => c.map((cLine, i) => acc[i] ? [...acc[i], e, ...cLine] : [...cLine]),
-    []
-  )
-  .map(bytes => stringFromBytes(bytes))
+const convertToLines = string =>
+  string
+    .split('')
+    .map(c => characters[c])
+    .reduce(
+      (acc, c) =>
+        c.map((cLine, i) => (acc[i] ? [...acc[i], e, ...cLine] : [...cLine])),
+      []
+    )
+    .map(bytes => stringFromBytes(bytes))
 
 module.exports = {
   convertToLines,
