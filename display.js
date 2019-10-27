@@ -6,8 +6,8 @@ const hugeCharacters = require('./huge-characters')
 const log = require('./log').child({module: 'display'})
 
 const displayConfiguration = {
-  scrollDelay: 250,
-  pageDelay: 5000,
+  scrollDelay: 800,
+  pageDelay: 8000,
 }
 
 const displayData = {
@@ -31,29 +31,33 @@ function getCurrentPage() {
 
 function updateDisplay() {
   const currentPage = getCurrentPage()
+  if (!currentPage.length) {
+    return
+  }
   log.debug('current page:', currentPage)
-  const lines = _.map(currentPage, (line, index) => {
+  const lines = currentPage.map((line, index) => {
     const lineOffset = displayData.lineOffsets[index]
     if (lineOffset < 0) {
       const lineLimited = line.substr(0, config.get('lcd.columns')).substr(0, 16 + lineOffset)
-      const linePadded = lineLimited.padStart(config.get('lcd.columns'))
-      return linePadded
+      return lineLimited.padStart(config.get('lcd.columns'))
     }
     const lineLimited = line.substr(lineOffset, config.get('lcd.columns'))
-    const linePadded = lineLimited.padEnd(config.get('lcd.columns'))
-    return linePadded
+    return lineLimited.padEnd(config.get('lcd.columns'))
   })
-  _.each(lines, (line, index) => {
-    lcd.println(line, index + 1)
-  })
+  for (const column of _.range(config.get('lcd.columns'))) {
+    for (const row of _.range(config.get('lcd.rows'))) {
+      lcd.setCursor(column, row)
+      lcd.print(lines[row].charAt(column))
+    }
+  }
 }
 
 function scroll() {
   const currentPage = getCurrentPage()
   log.debug('current page:', currentPage)
-  _.each(currentPage, (line, index) => {
-    if (_.size(line) > config.get('lcd.columns')) {
-      const diff = _.size(line) - config.get('lcd.columns')
+  currentPage.forEach((line, index) => {
+    if (line.length > config.get('lcd.columns')) {
+      const diff = line.length - config.get('lcd.columns')
       displayData.lineOffsets[index] = displayData.lineOffsets[index] + 1
       if (displayData.lineOffsets[index] > diff + config.get('lcd.columns')) {
         displayData.lineOffsets[index] = -config.get('lcd.columns') + 1
