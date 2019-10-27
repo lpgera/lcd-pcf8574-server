@@ -8,7 +8,7 @@ import logger from './log'
 const log = logger.child({ module: 'display' })
 
 const displayConfiguration = {
-  scrollDelay: 800,
+  scrollDelay: 1000,
   pageDelay: 8000,
 }
 
@@ -25,6 +25,10 @@ const displayData = {
   },
 }
 
+const previousDisplayData = _.times(config.get('lcd.rows'), () =>
+  _.times(config.get('lcd.columns'), _.constant(' '))
+)
+
 function getCurrentPage() {
   const pageIds = Object.keys(displayData.pages)
   const currentPageId = _.get(pageIds, displayData.currentPage)
@@ -36,6 +40,14 @@ function getCurrentPage() {
     return hugeCharacters.convertToLines(currentPage.lines[0] || '')
   }
   return currentPage.lines
+}
+
+function putCharacter(column: number, row: number, character: string) {
+  if (previousDisplayData[row][column] !== character) {
+    previousDisplayData[row][column] = character
+    lcd.setCursor(column, row)
+    lcd.print(character)
+  }
 }
 
 function updateDisplay() {
@@ -57,8 +69,7 @@ function updateDisplay() {
   })
   for (const column of _.range(config.get('lcd.columns'))) {
     for (const row of _.range(config.get('lcd.rows'))) {
-      lcd.setCursor(column, row)
-      lcd.print(lines[row].charAt(column))
+      putCharacter(column, row, lines[row].charAt(column))
     }
   }
 }
@@ -93,7 +104,6 @@ function page() {
     displayData.currentPage = 0
   }
   displayData.lineOffsets = _.times(config.get('lcd.rows'), _.constant(0))
-  lcd.clear()
   updateDisplay()
 }
 
