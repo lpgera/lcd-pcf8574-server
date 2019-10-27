@@ -4,8 +4,8 @@
   "description": "An express based rest API for controlling LCD displays using I2C PCF8574P",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon index.js | bunyan -L",
-    "prod": "cross-env NODE_ENV=production node index.js"
+    "dev": "cross-env NODE_ENV=development nodemon index.ts | bunyan -L",
+    "prod": "cross-env NODE_ENV=production ts-node index.ts"
   },
   "repository": {
     "type": "git",
@@ -31,9 +31,17 @@
     "express-jsonschema": "^1.1.6",
     "lcdi2c": "github:lpgera/lcdi2c",
     "lodash": "^4.17.15",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.4",
     "uuid": "^3.3.3"
   },
   "devDependencies": {
+    "@types/bunyan": "^1.8.6",
+    "@types/config": "0.0.35",
+    "@types/express": "^4.17.1",
+    "@types/express-jsonschema": "^1.1.1",
+    "@types/lodash": "^4.14.144",
+    "@types/uuid": "^3.4.5",
     "husky": "^3.0.9",
     "nodemon": "^1.19.4",
     "prettier": "^1.18.2",

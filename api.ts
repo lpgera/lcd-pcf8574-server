@@ -1,10 +1,12 @@
-const express = require('express')
-const expressBasicAuth = require('express-basic-auth')
-const bodyParser = require('body-parser')
-const expressJsonschema = require('express-jsonschema')
-const config = require('config')
-const display = require('./display')
-const log = require('./log').child({ module: 'api' })
+import express from 'express'
+import expressBasicAuth from 'express-basic-auth'
+import bodyParser from 'body-parser'
+import expressJsonschema from 'express-jsonschema'
+import config from 'config'
+import * as display from './display'
+import logger from './log'
+
+const log = logger.child({ module: 'api' })
 const router = express.Router()
 
 router.use(bodyParser.json())
@@ -15,7 +17,7 @@ router.use(
   })
 )
 
-router.use((req, res, next) => {
+router.use((req, _, next) => {
   log.debug('api call received:', req.method, req.originalUrl, req.body)
   return next()
 })
@@ -33,6 +35,7 @@ const powerSchema = {
 
 router.put(
   '/power',
+  // @ts-ignore
   expressJsonschema.validate({ body: powerSchema }),
   (req, res) => {
     if (req.body.state === 'on') {
@@ -60,6 +63,7 @@ const configurationSchema = {
 
 router.patch(
   '/configuration',
+  // @ts-ignore
   expressJsonschema.validate({ body: configurationSchema }),
   (req, res) => {
     if (req.body.scrollDelay) {
@@ -90,6 +94,7 @@ const pageSchema = {
 
 router.post(
   '/page',
+  // @ts-ignore
   expressJsonschema.validate({ body: pageSchema }),
   (req, res) => {
     const uuid = display.addPage(req.body)
@@ -99,6 +104,7 @@ router.post(
 
 router.put(
   '/page/:uuid',
+  // @ts-ignore
   expressJsonschema.validate({ body: pageSchema }),
   (req, res) => {
     const isUpdated = display.createOrUpdatePage(req.params.uuid, req.body)
@@ -117,10 +123,11 @@ router.delete('/page/:uuid', (req, res) => {
   return res.status(404).send()
 })
 
-router.use((req, res) => {
+router.use((_, res) => {
   return res.status(404).send()
 })
 
+// @ts-ignore
 // noinspection JSUnusedLocalSymbols
 router.use((err, req, res, next) => {
   if (err.name === 'JsonSchemaValidation') {
@@ -130,4 +137,4 @@ router.use((err, req, res, next) => {
   return res.status(500).send({ error: err.message })
 })
 
-module.exports = router
+export default router

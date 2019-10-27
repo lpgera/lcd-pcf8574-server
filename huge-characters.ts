@@ -1,6 +1,6 @@
-const lcd = require('./lcd')
+import lcd from './lcd'
 
-const u = 0 // upper half
+const u = 0 // upper h/alf
 const l = 1 // lower half
 const f = 2 // full
 const e = 3 // empty
@@ -122,19 +122,17 @@ const characters = {
   ],
 }
 
-const stringFromBytes = bytes => bytes.map(b => String.fromCharCode(b)).join('')
+const stringFromBytes = (bytes: number[]) =>
+  bytes.map(b => String.fromCharCode(b)).join('')
 
-const convertToLines = string =>
+export const convertToLines = (string: string) =>
   string
     .split('')
-    .map(c => characters[c])
+    // @ts-ignore
+    .map(c => characters[c] as number[][])
     .reduce(
       (acc, c) =>
         c.map((cLine, i) => (acc[i] ? [...acc[i], e, ...cLine] : [...cLine])),
       []
     )
     .map(bytes => stringFromBytes(bytes))
-
-module.exports = {
-  convertToLines,
-}

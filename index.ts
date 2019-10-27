@@ -1,15 +1,17 @@
-const config = require('config')
-const express = require('express')
-const log = require('./log')
-const api = require('./api')
+import config from 'config'
+import express from 'express'
+import log from './log'
+import api from './api'
+
 const server = express()
 
 server.use('/api', api)
 
-server.use((req, res) => {
+server.use((_, res) => {
   res.status(404).send()
 })
 
+// @ts-ignore
 // noinspection JSUnusedLocalSymbols
 server.use((err, req, res, next) => {
   log.error(err)

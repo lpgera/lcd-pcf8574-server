@@ -1,11 +1,11 @@
-const bunyan = require('bunyan')
+import bunyan, { Stream } from 'bunyan'
 
 const developmentStreams = [
   {
     level: 'trace',
     stream: process.stdout,
   },
-]
+] as Stream[]
 
 const productionStreams = [
   {
@@ -16,9 +16,9 @@ const productionStreams = [
     level: 'error',
     stream: process.stderr,
   },
-]
+] as Stream[]
 
-const log = bunyan.createLogger({
+export default bunyan.createLogger({
   name: 'lcd-pcf8574-server',
   streams: (() => {
     if (process.env.NODE_ENV === 'development') {
@@ -27,5 +27,3 @@ const log = bunyan.createLogger({
     return productionStreams
   })(),
 })
-
-module.exports = log
